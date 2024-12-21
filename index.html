@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gradio API Integration - Math Demo</title>
+    <style>
+        /* Basic reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body and container styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            padding: 20px;
+        }
+
+        /* Header styling */
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            color: #4CAF50;
+        }
+
+        header p {
+            font-size: 1.2em;
+            color: #555;
+        }
+
+        /* Gradio container */
+        .gradio-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Footer styling */
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 1em;
+            color: #777;
+        }
+
+        /* Form and input styling */
+        .api-key-form {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .api-key-input {
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        .api-key-button {
+            padding: 10px 20px;
+            font-size: 1em;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .api-key-button:hover {
+            background-color: #45a049;
+        }
+
+        /* Note and redirect styling */
+        .no-api-key-note {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: red;
+        }
+
+        .create-api-key-note {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 1em;
+            color: #555;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            header p {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Gradio API Integration - Math Demo</h1>
+        <p>Interact with the Gradio math demo using the API</p>
+    </header>
+      
+    <!-- API Key Input Form -->
+    <div class="api-key-form">
+        <input type="text" id="apiKey" class="api-key-input" placeholder="Enter your API key" />
+        <button class="api-key-button" onclick="loadGradioApp()">Submit</button>
+    </div>
+
+    <!-- Note for missing API Key -->
+    <div id="no-api-key-note" class="no-api-key-note" style="display: none;">
+        <p>No API key entered. You will be redirected to obtain an API key from Hugging Face.</p>
+    </div>
+    <!-- Note for creating an API Key -->
+    <div id="create-api-key-note" class="create-api-key-note" style="display: none;">
+        <p>If you do not have an API key, you can <a href="https://huggingface.co/settings/tokens" target="_blank">create one here</a>.</p>
+    </div>
+
+    <!-- Gradio app integration -->
+    <div class="gradio-container" id="gradio-container"></div>
+
+    <!-- Footer -->
+    <footer>
+        <p id="api-note">Don't have a key <a href="https://huggingface.co/docs/huggingface_hub/quick-start#2-login" target="_blank">Get an API Key</a>.</p>
+    </footer>
+
+    <script type="module" src="https://gradio.s3-us-west-2.amazonaws.com/4.38.1/gradio.js"></script>
+    <script>
+        function loadGradioApp() {
+            const apiKey = document.getElementById('apiKey').value;
+            
+            if (apiKey) {
+                // Dynamically inject the Gradio app with the API key
+                const gradioApp = document.createElement('gradio-app');
+                gradioApp.setAttribute('src', `https://qwen-qwen2-math-demo.hf.space?api_key=${apiKey}`);
+                document.getElementById('gradio-container').innerHTML = ''; // Clear previous content
+                document.getElementById('gradio-container').appendChild(gradioApp);
+            } else {
+                // Show the note and redirect to Hugging Face Access Tokens page
+                document.getElementById('no-api-key-note').style.display = 'block';
+                document.getElementById('create-api-key-note').style.display = 'block'; // Show API key creation note
+                setTimeout(function() {
+                    window.location.href = 'https://huggingface.co/settings/tokens';  // Hugging Face Access Tokens page
+                }, 3000);  // Redirect after 3 seconds
+            }
+        }
+    </script>
+</body>
+</html>
